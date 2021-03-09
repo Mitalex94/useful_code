@@ -12,21 +12,18 @@ def generate_sentances(our_sentance, amount, length):
         for i in range(length):
             inputs = tokenizer(sentance, return_tensors="pt")
             outputs = model(**inputs, labels=inputs["input_ids"])
-            loss = outputs.loss
-            logits = outputs.logits
-            logits = logits.detach().numpy()
+            logits = outputs.logits.detach().numpy()
             mark = random.randint(1,3)
             if mark == 1: 
-                sentance = sentance + tokenizer.decode(int(softmax(logits[0, -1]).argmax()))
+                sentance += tokenizer.decode(int(softmax(logits[0, -1]).argmax()))
             elif mark == 2:
                 x = softmax(logits[0, -1])
                 x[x.argmax()]=0
-                sentance = sentance + tokenizer.decode(int(x.argmax()))
+                sentance += tokenizer.decode(int(x.argmax()))
             elif mark == 3:
                 x = softmax(logits[0, -1])
                 x[x.argmax()]=0
-                x[x.argmax()]=0
-                sentance = sentance + tokenizer.decode(int(x.argmax()))
+                sentance += tokenizer.decode(int(x.argmax()))
         print(sentance)
         
 sentence = input()
